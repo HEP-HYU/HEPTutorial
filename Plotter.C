@@ -68,52 +68,52 @@ void Plotter::Plot(std::string filename) {
 	bool DrawLog = true;
    
 	for (int i = 0; i < N_histos; ++i) {
-      
+		
 		THStack *hs;
 		TLegend *l;
-      int Nset = data.size() + bg.size() + signal.size();
-      if (Nset > 20)
-         Nset = 20.;
-      l = new TLegend(0.76, 0.95 - 0.8 * Nset / 20., 1.0, 0.95);
-      l->SetFillStyle(1001);
-      l->SetFillColor(kWhite);
-      l->SetLineColor(kWhite);
-      l->SetLineWidth(2);
+		int Nset = data.size() + bg.size() + signal.size();
+		if (Nset > 20)
+			Nset = 20.;
+		l = new TLegend(0.76, 0.95 - 0.8 * Nset / 20., 1.0, 0.95);
+		l->SetFillStyle(1001);
+		l->SetFillColor(kWhite);
+		l->SetLineColor(kWhite);
+		l->SetLineWidth(2);
 		if (bg.size() > 0) {
 			hs = new THStack("hs", bg.at(0).at(i)->GetName());
 			int j = 0;
 			for (std::vector<std::vector<TH1F*> >::const_iterator it = bg.begin(); it != bg.end(); ++it) {
 				switch (j) {
-               case 0:
-                  it->at(i)->SetFillColor(kRed);
-                  break;
-               case 1:
-                  it->at(i)->SetFillColor(kOrange);
-                  break;
-               case 2:
-                  it->at(i)->SetFillColor(kYellow);
-                  break;
-               case 3:
-                  it->at(i)->SetFillColor(kGreen);
-                  break;
-               case 4:
-                  it->at(i)->SetFillColor(kCyan);
-                  break;
-               case 5:
-                  it->at(i)->SetFillColor(kBlue);
-                  break;
-               case 6:
-                  it->at(i)->SetFillColor(kMagenta);
-                  break;
-               case 7:
-                  it->at(i)->SetFillColor(kGray);
-                  break;
-               case 8:
-                  it->at(i)->SetFillColor(kGray + 2);
-                  break;
-               default:
-                  it->at(i)->SetFillColor(kBlack);
-                  break;
+				case 0:
+					it->at(i)->SetFillColor(kRed);
+					break;
+				case 1:
+					it->at(i)->SetFillColor(kOrange);
+					break;
+				case 2:
+					it->at(i)->SetFillColor(kYellow);
+					break;
+				case 3:
+					it->at(i)->SetFillColor(kGreen);
+					break;
+				case 4:
+					it->at(i)->SetFillColor(kCyan);
+					break;
+				case 5:
+					it->at(i)->SetFillColor(kBlue);
+					break;
+				case 6:
+					it->at(i)->SetFillColor(kMagenta);
+					break;
+				case 7:
+					it->at(i)->SetFillColor(kGray);
+					break;
+				case 8:
+					it->at(i)->SetFillColor(kGray + 2);
+					break;
+				default:
+					it->at(i)->SetFillColor(kBlack);
+					break;
 				}
 				hs->Add(it->at(i));
 				l->AddEntry(it->at(i), bg_names.at(j).c_str(), "f");
@@ -122,9 +122,9 @@ void Plotter::Plot(std::string filename) {
 		}
 		TCanvas *c = new TCanvas("c", "c", 800, 600);
 		c->SetLogy(DrawLog);
-      std::string plotname;
+		std::string plotname;
 		if (data.size() > 0) {
-         plotname = std::string(data.at(0).at(i)->GetName());
+			plotname = std::string(data.at(0).at(i)->GetName());
 			data.at(0).at(i)->SetMaximum(5 * data.at(0).at(i)->GetMaximum());
 			data.at(0).at(i)->GetXaxis()->SetTitleOffset(1.3);
 			data.at(0).at(i)->GetYaxis()->SetTitleOffset(1.3);
@@ -132,32 +132,32 @@ void Plotter::Plot(std::string filename) {
 			data.at(0).at(i)->GetXaxis()->SetNdivisions(505);
 			data.at(0).at(i)->Draw("");
 			l->AddEntry(data.at(0).at(i), data_names.at(0).c_str(), "p");
-         if (bg.size() > 0)
-            hs->Draw("histsame");
-         data.at(0).at(i)->SetMarkerStyle(20);
-         data.at(0).at(i)->Draw("psame");
-         l->Draw("same");
+			if (bg.size() > 0)
+			hs->Draw("histsame");
+			data.at(0).at(i)->SetMarkerStyle(20);
+			data.at(0).at(i)->Draw("psame");
+			l->Draw("same");
 		}
 		if (data.size() == 0 && bg.size() > 0) {
-         plotname = std::string(bg.at(0).at(i)->GetName());
+			plotname = std::string(bg.at(0).at(i)->GetName());
 			hs->Draw("hist");
-         hs->GetXaxis()->SetTitleOffset(1.3);
-         hs->GetXaxis()->SetNdivisions(505);
-         hs->GetYaxis()->SetTitleOffset(1.3);
-         if (bg.size() > 0)
-            hs->GetXaxis()->SetTitle(bg.at(0).at(i)->GetXaxis()->GetTitle());
-         hs->GetYaxis()->SetTitle("Events");
-         
-         l->Draw("same");
+			hs->GetXaxis()->SetTitleOffset(1.3);
+			hs->GetXaxis()->SetNdivisions(505);
+			hs->GetYaxis()->SetTitleOffset(1.3);
+			if (bg.size() > 0)
+				hs->GetXaxis()->SetTitle(bg.at(0).at(i)->GetXaxis()->GetTitle());
+			hs->GetYaxis()->SetTitle("Events");
+			
+			l->Draw("same");
 		}
 //      c->Print((filename+std::string("_")+plotname+std::string(".pdf")).c_str());
-		if (i == 0 && N_histos > 1) {
+		if (i == 0 && N_histos > 1)
 			c->Print((filename+std::string("(")).c_str());
-		} else if (i > 0 && i == N_histos - 1)
+		else if (i > 0 && i == N_histos - 1)
 			c->Print((filename+std::string(")")).c_str());
 		else
 			c->Print(filename.c_str());
-      
+		
 	}
-   
+	
 }

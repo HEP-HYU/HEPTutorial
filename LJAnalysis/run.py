@@ -20,6 +20,7 @@ samples = {
 }
 
 if not os.path.exists("hists"):
+    #proof = TProof.Open("")
     os.mkdir("hists")
     for sample in samples:
         chain = TChain("events")
@@ -28,6 +29,8 @@ if not os.path.exists("hists"):
         opt = sample
         if sample == 'ttbarOthers': opt += ',OTHERS'
         elif sample == 'ttbar': opt += ',SIGNAL'
+
+        #chain.SetProof()
         chain.Process('LJAnalyzer.C+', opt)
 
 for sample in samples:

@@ -1,0 +1,5 @@
+hists
+*.so
+*.d
+*.pcm
+*.root

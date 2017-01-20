@@ -66,7 +66,7 @@ void Plotter::Plot(std::string filename) {
       
           THStack *hs;
           TLegend *l;
-          TH1F *h_signal; 
+          TH1D *h_signal; 
 
           int Nset = data.size() + bg.size() + signal.size();
           if (Nset > 20)

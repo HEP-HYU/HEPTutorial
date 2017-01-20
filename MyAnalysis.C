@@ -25,7 +25,7 @@
 
 #include "MyAnalysis.h"
 #include <iostream>
-#include <TH1F.h>
+#include <TH1D.h>
 #include <TLatex.h>
 
 using namespace std;
@@ -57,16 +57,16 @@ void MyAnalysis::BuildEvent() {
    
    Jets.clear();
    for (int i = 0; i < NJet; ++i) {
-      MyJet jet(Jet_Pt[i], Jet_Eta[i], Jet_Phi[i], Jet_E[i]);
+      MyJet jet;
+      jet.SetPtEtaPhiE( Jet_Pt[i], Jet_Eta[i], Jet_Phi[i], Jet_E[i] );
       jet.SetBTagDiscriminator(Jet_bDiscriminator[i]);
       //jet.SetJetID(Jet_ID[i]);
       //jet cleaning 
-      
       bool overlap = false;
-
+      double dr = 999.0;
       for(int j = 0 ; j < Electrons.size() ; j ++){
-        double dr = jet.DeltaR(Electrons[j]);
-        if( dr < 0.5 ){
+        dr = jet.DeltaR(Electrons[j]);
+        if( dr < 0.4 ){
           overlap = true;
           break;
         }
@@ -74,8 +74,8 @@ void MyAnalysis::BuildEvent() {
       if( overlap ) continue;
 
       for(int j = 0 ; j < Muons.size() ; j ++){
-        double dr = jet.DeltaR(Muons[j]);
-        if( dr < 0.5 ){
+        dr = jet.DeltaR(Muons[j]);
+        if( dr < 0.4 ){
           overlap = true;
           break;
         }
@@ -83,8 +83,8 @@ void MyAnalysis::BuildEvent() {
       if( overlap ) continue;
 
       Jets.push_back(jet);
+
    }
-   
    //hadB.SetXYZM(MChadronicBottom_px, MChadronicBottom_py, MChadronicBottom_pz, 4.8);
    //lepB.SetXYZM(MCleptonicBottom_px, MCleptonicBottom_py, MCleptonicBottom_pz, 4.8);
    //hadWq.SetXYZM(MChadronicWDecayQuark_px, MChadronicWDecayQuark_py, MChadronicWDecayQuark_pz, 0.0);
@@ -117,55 +117,55 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/) {
    TString option = GetOption();
 
    for(int i=0; i < 4; i++){ 
-     h_NVertex[i] = new TH1F(Form("h_NVertex_S%i_%s",i,option.Data()), "Number of vertex", 50 , 0, 50);
+     h_NVertex[i] = new TH1D(Form("h_NVertex_S%i_%s",i,option.Data()), "Number of vertex", 50 , 0, 50);
      h_NVertex[i]->SetXTitle("No. Vertexs");
      h_NVertex[i]->Sumw2();
      histograms.push_back(h_NVertex[i]);
      histograms_MC.push_back(h_NVertex[i]);
     
-     //h_Mmumu[i] = new TH1F(Form("h_Mmumu_S%i_%s",i,option.Data()), "Di-muon mass", 100, 40, 140);
+     //h_Mmumu[i] = new TH1D(Form("h_Mmumu_S%i_%s",i,option.Data()), "Di-muon mass", 100, 40, 140);
      //h_Mmumu[i]->SetXTitle("Di-muon mass");
      //h_Mmumu[i]->Sumw2();
      //histograms.push_back(h_Mmumu[i]);
      //histograms_MC.push_back(h_Mmumu[i]);
    
-     h_NMuon[i] = new TH1F(Form("h_NMuon_S%i_%s",i,option.Data()), "Number of muons", 7, 0, 7);
+     h_NMuon[i] = new TH1D(Form("h_NMuon_S%i_%s",i,option.Data()), "Number of muons", 7, 0, 7);
      h_NMuon[i]->SetXTitle("Muon Multiplicity");
      h_NMuon[i]->Sumw2();
      histograms.push_back(h_NMuon[i]);
      histograms_MC.push_back(h_NMuon[i]);
  
-     h_MuonIso[i] = new TH1F(Form("h_MuonIso_S%i_%s",i,option.Data()), "Relative Isolation", 80, 0, 0.4);
+     h_MuonIso[i] = new TH1D(Form("h_MuonIso_S%i_%s",i,option.Data()), "Relative Isolation", 80, 0, 0.4);
      h_MuonIso[i]->SetXTitle("Relative Isolation");
      h_MuonIso[i]->Sumw2();
      histograms.push_back(h_MuonIso[i]);
      histograms_MC.push_back(h_MuonIso[i]);
  
-     h_WMuon_MT[i] = new TH1F(Form("h_WMuon_MT_S%i_%s",i,option.Data()), "Transverse mass", 60, 0, 120);
+     h_WMuon_MT[i] = new TH1D(Form("h_WMuon_MT_S%i_%s",i,option.Data()), "Transverse mass", 60, 0, 120);
      h_WMuon_MT[i]->SetXTitle("MT(Gev)");
      h_WMuon_MT[i]->Sumw2();
      histograms.push_back(h_WMuon_MT[i]);
      histograms_MC.push_back(h_WMuon_MT[i]);
 
-     h_WMuon_Phi[i] = new TH1F(Form("h_WMuon_Phi_S%i_%s",i,option.Data()), "DR between muon and MET", 70, 0, 3.5);
+     h_WMuon_Phi[i] = new TH1D(Form("h_WMuon_Phi_S%i_%s",i,option.Data()), "DR between muon and MET", 70, 0, 3.5);
      h_WMuon_Phi[i]->SetXTitle("DR between muon and MET");
      h_WMuon_Phi[i]->Sumw2();
      histograms.push_back(h_WMuon_Phi[i]);
      histograms_MC.push_back(h_WMuon_Phi[i]);
 
-     h_NJet[i] = new TH1F(Form("h_NJet_S%i_%s",i,option.Data()), "Number of jets", 14, 0, 14);
+     h_NJet[i] = new TH1D(Form("h_NJet_S%i_%s",i,option.Data()), "Number of jets", 14, 0, 14);
      h_NJet[i]->SetXTitle("Jet Multiplicity");
      h_NJet[i]->Sumw2();
      histograms.push_back(h_NJet[i]);
      histograms_MC.push_back(h_NJet[i]);
 
-     h_NBJet[i] = new TH1F(Form("h_NBJet_S%i_%s",i,option.Data()), "Number of b tagged jets", 5, 0, 5);
+     h_NBJet[i] = new TH1D(Form("h_NBJet_S%i_%s",i,option.Data()), "Number of b tagged jets", 5, 0, 5);
      h_NBJet[i]->SetXTitle("b-tagged Jet Multiplicity (CSVM)");
      h_NBJet[i]->Sumw2();
      histograms.push_back(h_NBJet[i]);
      histograms_MC.push_back(h_NBJet[i]);
 
-     h_MET[i] = new TH1F(Form("h_MET_S%i_%s",i,option.Data()), "MET", 10, 0, 100);
+     h_MET[i] = new TH1D(Form("h_MET_S%i_%s",i,option.Data()), "MET", 10, 0, 100);
      h_MET[i]->SetXTitle("MET");
      h_MET[i]->Sumw2();
      histograms.push_back(h_MET[i]);
@@ -254,6 +254,14 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
      }
    }
 
+   int njets = Jets.size();
+
+   int nbjets = 0;
+   for (vector<MyJet>::iterator jt = Jets.begin(); jt != Jets.end(); ++jt) {
+     MyJet * jet = &(*jt);
+     if( jet->IsBTagged(0.8) ) nbjets++; 
+   }
+
    if( debug ) cout << "filling at step0..." << endl;
 
    //if(!IsMuonTrig) return kTRUE;
@@ -265,8 +273,8 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
      h_NVertex[0]->Fill(NVertex, EventWeight);
      h_WMuon_MT[0]->Fill( WMuon_MT[sel_mu], EventWeight);
      h_WMuon_Phi[0]->Fill( WMuon_Phi[sel_mu], EventWeight);
-     h_NJet[0]->Fill(NJet, EventWeight);
-     h_NBJet[0]->Fill(NBJet, EventWeight);
+     h_NJet[0]->Fill(njets, EventWeight);
+     h_NBJet[0]->Fill(nbjets, EventWeight);
      h_MET[0]->Fill(MET, EventWeight);
    }
 
@@ -278,33 +286,33 @@ Bool_t MyAnalysis::Process(Long64_t entry) {
      h_NVertex[1]->Fill(NVertex, EventWeight);
      h_WMuon_MT[1]->Fill( WMuon_MT[sel_mu], EventWeight);
      h_WMuon_Phi[1]->Fill( WMuon_Phi[sel_mu], EventWeight);
-     h_NJet[1]->Fill(NJet, EventWeight);
-     h_NBJet[1]->Fill(NBJet, EventWeight); 
+     h_NJet[1]->Fill(njets, EventWeight);
+     h_NBJet[1]->Fill(nbjets, EventWeight); 
      h_MET[1]->Fill(MET, EventWeight);
       
      //if (N_IsoMuon > 1 ) h_Mmumu[1]->Fill((*muon1 + *muon2).M(), EventWeight);
 
      if( debug ) cout << "filling at step2..." << endl;
-     if( NJet > 3){ //step 2
+     if( njets > 3){ //step 2
        h_MuonIso[2]->Fill(Muon_Iso03[sel_mu], EventWeight); 
        h_NMuon[2]->Fill(N_IsoMuon, EventWeight);
        h_NVertex[2]->Fill(NVertex, EventWeight);
        h_WMuon_MT[2]->Fill( WMuon_MT[sel_mu], EventWeight);
        h_WMuon_Phi[2]->Fill( WMuon_Phi[sel_mu], EventWeight);
-       h_NJet[2]->Fill(NJet, EventWeight);
-       h_NBJet[2]->Fill(NBJet, EventWeight);
+       h_NJet[2]->Fill(njets, EventWeight);
+       h_NBJet[2]->Fill(nbjets, EventWeight);
        h_MET[2]->Fill(MET, EventWeight);
 
        if( debug ) cout << "filling at step3..." << endl;
 
-       if( NBJet > 1 ){ //step 3
+       if( nbjets > 1 ){ //step 3
          h_MuonIso[3]->Fill(Muon_Iso03[sel_mu], EventWeight); 
          h_NMuon[3]->Fill(N_IsoMuon, EventWeight);
          h_NVertex[3]->Fill(NVertex, EventWeight);
          h_WMuon_MT[3]->Fill( WMuon_MT[sel_mu], EventWeight);
          h_WMuon_Phi[3]->Fill( WMuon_Phi[sel_mu], EventWeight);
-         h_NJet[3]->Fill(NJet, EventWeight);
-         h_NBJet[3]->Fill(NBJet, EventWeight);
+         h_NJet[3]->Fill(njets, EventWeight);
+         h_NBJet[3]->Fill(nbjets, EventWeight);
          h_MET[3]->Fill(MET, EventWeight);
 
        } 
@@ -324,7 +332,7 @@ void MyAnalysis::SlaveTerminate() {
 
    TFile * out = TFile::Open(Form("hist_%s.root",option.Data()),"RECREATE");
    for(int i=0; i < histograms.size(); i++){
-     TH1F * tmp = (TH1F *) histograms[i];
+     TH1D * tmp = (TH1D *) histograms[i];
      tmp->Write();
    }
    out->Write();

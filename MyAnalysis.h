@@ -12,7 +12,7 @@
 #include <TFile.h>
 #include <TChain.h>
 #include <TSelector.h>
-#include <TH1F.h>
+#include <TH1D.h>
 #include <TLorentzVector.h>
 #include <vector>
 
@@ -168,18 +168,18 @@ public:
    float norm_scale;
    float SF_b;
   
-   TH1F *h_Mmumu[4];
-   TH1F *h_NMuon[4];
-   TH1F *h_MuonIso[4];
-   TH1F *h_NVertex[4];
-   TH1F *h_WMuon_MT[4];
-   TH1F *h_WMuon_Phi[4];
-   TH1F *h_NJet[4]; 
-   TH1F *h_NBJet[4]; 
-   TH1F *h_MET[4]; 
+   TH1D *h_Mmumu[4];
+   TH1D *h_NMuon[4];
+   TH1D *h_MuonIso[4];
+   TH1D *h_NVertex[4];
+   TH1D *h_WMuon_MT[4];
+   TH1D *h_WMuon_Phi[4];
+   TH1D *h_NJet[4]; 
+   TH1D *h_NBJet[4]; 
+   TH1D *h_MET[4]; 
  
-   vector<TH1F*> histograms;
-   vector<TH1F*> histograms_MC;
+   vector<TH1D*> histograms;
+   vector<TH1D*> histograms_MC;
    
 };
 
@@ -258,7 +258,7 @@ void MyAnalysis::Init(TTree *tree)
    TFile * f = ((TChain *) fChain)->GetFile();
    //const char * name = ((TChain *) fChain)->GetFile()->GetName();
    //cout << "name = " << name << endl;
-   TH1F * hevt = (TH1F*) f->Get("TopTree/EventSummary");
+   TH1D * hevt = (TH1D*) f->Get("TopTree/EventSummary");
    nEvents = hevt->GetBinContent(2);
  
    TotalEvents = 0;

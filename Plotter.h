@@ -12,7 +12,7 @@
 #include <string>
 #include <iostream>
 
-#include <TH1F.h>
+#include <TH1D.h>
 #include <TFile.h>
 #include <TStyle.h>
 #include <THStack.h>
@@ -31,20 +31,20 @@ public:
         void SetLumi(float l){
           luminosity = l;
         }
-	void SetData(std::vector<TH1F*> v, std::string n){
+	void SetData(std::vector<TH1D*> v, std::string n){
 		data.push_back(v);
 		data_names.push_back(n);
 		N_histos = v.size();
 	}
         void SetData(TString name, std::string n){
                TFile * f = new TFile(Form("%s",name.Data()));
-               std::vector<TH1F*> v;
+               std::vector<TH1D*> v;
                TIter next(f->GetListOfKeys()); 
                TKey *key;
                while (key = (TKey*)next() ){
                  TClass *cl = gROOT->GetClass(key->GetClassName());
-                 if ( cl->InheritsFrom("TH1F")) {
-                   TH1F * h = (TH1F*) key->ReadObj(); 
+                 if ( cl->InheritsFrom("TH1D")) {
+                   TH1D * h = (TH1D*) key->ReadObj(); 
                    v.push_back(h);
                  }
                }
@@ -57,7 +57,7 @@ public:
 		data.clear();
 		data_names.clear();
 	}
-	void AddBg(std::vector<TH1F*> v, std::string n, Color_t color, float x = 1.0){
+	void AddBg(std::vector<TH1D*> v, std::string n, Color_t color, float x = 1.0){
 		bg.push_back(v);
 		bg_names.push_back(n);
 		N_histos = v.size();
@@ -66,13 +66,13 @@ public:
 	}
         void AddBg(TString name, std::string n, Color_t color, float x = 1.0){
                 TFile * f = new TFile(Form("%s",name.Data()));
-                std::vector<TH1F*> v;
+                std::vector<TH1D*> v;
                 TIter next(f->GetListOfKeys());             
                 TKey *key;
                 while (key = (TKey*)next() ){
                   TClass *cl = gROOT->GetClass(key->GetClassName());
-                  if ( cl->InheritsFrom("TH1F")) {
-                    TH1F * h = (TH1F*) key->ReadObj();
+                  if ( cl->InheritsFrom("TH1D")) {
+                    TH1D * h = (TH1D*) key->ReadObj();
                     v.push_back(h);
                   }
                 }
@@ -87,7 +87,7 @@ public:
 		bg.clear();
 		bg_names.clear();
 	}
-	void AddSig(std::vector<TH1F*> v, std::string n, Color_t color, float x = 1.0){
+	void AddSig(std::vector<TH1D*> v, std::string n, Color_t color, float x = 1.0){
 		signal.push_back(v);
 		signal_names.push_back(n);
 		N_histos = v.size();
@@ -96,13 +96,13 @@ public:
 	}
         void AddSig(TString name, std::string n, Color_t color, float x = 1.0){
                 TFile * f = new TFile(Form("%s",name.Data()));
-                std::vector<TH1F*> v;
+                std::vector<TH1D*> v;
                 TIter next(f->GetListOfKeys());             
                 TKey *key;
                 while (key = (TKey*)next() ){
                   TClass *cl = gROOT->GetClass(key->GetClassName());
-                  if ( cl->InheritsFrom("TH1F")) {
-                    TH1F * h = (TH1F*) key->ReadObj();
+                  if ( cl->InheritsFrom("TH1D")) {
+                    TH1D * h = (TH1D*) key->ReadObj();
                     v.push_back(h);
                   }
                 }
@@ -120,9 +120,9 @@ public:
 	void Plot(std::string filename = "result.pdf");
 
 private:
-	std::vector < std::vector<TH1F*> > data;
-	std::vector < std::vector<TH1F*> > bg;
-	std::vector < std::vector<TH1F*> > signal;
+	std::vector < std::vector<TH1D*> > data;
+	std::vector < std::vector<TH1D*> > bg;
+	std::vector < std::vector<TH1D*> > signal;
 
         std::vector < float > bg_X;
         std::vector < float > signal_X;

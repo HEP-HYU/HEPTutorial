@@ -181,6 +181,7 @@ public:
    vector<TH1D*> histograms;
    vector<TH1D*> histograms_MC;
    
+   ClassDef(MyAnalysis,0);
 };
 
 #endif
@@ -256,6 +257,7 @@ void MyAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("GenWeight", &GenWeight);
   
    TFile * f = ((TChain *) fChain)->GetFile();
+   if ( !f ) f = ((TChain *) fChain)->GetCurrentFile();
    //const char * name = ((TChain *) fChain)->GetFile()->GetName();
    //cout << "name = " << name << endl;
    TH1D * hevt = (TH1D*) f->Get("TopTree/EventSummary");

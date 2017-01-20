@@ -2,31 +2,22 @@
 
 C=c++
 LD=c++
-
-ROOTCFLAGS=$(shell root-config --cflags)
-ROOTLIBS=$(shell root-config --libs)
-
-CFLAGS =
-LFLAGS =
-
-RCXX=$(CFLAGS) $(ROOTCFLAGS)
-RLXX=$(LFLAGS) $(ROOTLIBS)
+RDICT = rootcling -v0
+CXXFLAGS += $(shell root-config --cflags) -fPIC -I.
+LDFLAGS += $(shell root-config --glibs)
 
 SRC1= MyAnalysis.o MyJet.o MyMuon.o MyElectron.o MyPhoton.o Plotter.o
 
 %.o: %.C %.h
-		$(C) $(RCXX) -c $<
+		$(C) -o $@ -c $(CXXFLAGS) $<
 
-all: example
+all: libMyAnalysis.so LinkDef.cxx
 
-example.o: example.C MyAnalysis.h
-		$(C) $(RCXX) -c $<
+LinkDef.cxx: LinkDef.h
+	$(RDICT) -f $@ -c MyAnalysis.h Plotter.h $<
 
-example: $(SRC1) example.o
-		$(LD) $(SRC1) example.o $(RLXX) -o example.x
-		@echo '-> example.x created!'
+libMyAnalysis.so: LinkDef.cxx $(SRC1)
+	$(LD) -o $@ -shared $(CXXFLAGS) $(LDFLAGS) $(SRC1) $<
 
 clean:
-		@rm -f *~
-		@rm -f *.o 
-		@rm -f *.x
+	@rm -f *.so *.o *.cxx *.pcm

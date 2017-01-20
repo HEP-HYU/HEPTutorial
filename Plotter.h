@@ -41,7 +41,7 @@ public:
                std::vector<TH1D*> v;
                TIter next(f->GetListOfKeys()); 
                TKey *key;
-               while (key = (TKey*)next() ){
+               while ( (key = (TKey*)next()) != 0 ){
                  TClass *cl = gROOT->GetClass(key->GetClassName());
                  if ( cl->InheritsFrom("TH1D")) {
                    TH1D * h = (TH1D*) key->ReadObj(); 
@@ -69,7 +69,7 @@ public:
                 std::vector<TH1D*> v;
                 TIter next(f->GetListOfKeys());             
                 TKey *key;
-                while (key = (TKey*)next() ){
+                while ( (key = (TKey*)next()) != 0 ){
                   TClass *cl = gROOT->GetClass(key->GetClassName());
                   if ( cl->InheritsFrom("TH1D")) {
                     TH1D * h = (TH1D*) key->ReadObj();
@@ -99,7 +99,7 @@ public:
                 std::vector<TH1D*> v;
                 TIter next(f->GetListOfKeys());             
                 TKey *key;
-                while (key = (TKey*)next() ){
+                while ( (key = (TKey*)next()) != 0 ){
                   TClass *cl = gROOT->GetClass(key->GetClassName());
                   if ( cl->InheritsFrom("TH1D")) {
                     TH1D * h = (TH1D*) key->ReadObj();

@@ -328,21 +328,26 @@ void MyAnalysis::SlaveTerminate() {
    // The SlaveTerminate() function is called after all entries or objects
    // have been processed. When running with PROOF SlaveTerminate() is called
    // on each slave server.
-   TString option = GetOption();
 
-   TFile * out = TFile::Open(Form("hist_%s.root",option.Data()),"RECREATE");
-   for(int i=0; i < histograms.size(); i++){
-     TH1D * tmp = (TH1D *) histograms[i];
-     tmp->Write();
-   }
-   out->Write();
-   out->Close();
-   
+   for ( auto h : histograms ) fOutput->Add(h);
 }
 
 void MyAnalysis::Terminate() {
    // The Terminate() function is the last function to be called during
    // a query. It always runs on the client, it can be used to present
    // the results graphically or save the results to file.
-   
+   TString option = GetOption();
+
+   TFile * out = TFile::Open(Form("hist_%s.root",option.Data()),"RECREATE");
+   for(int i=0; i < fOutput->GetEntries(); i++){
+     TH1D * tmp = (TH1D *) fOutput->At(i);
+     tmp->Write();
+   }
+   out->Write();
+   out->Close();
+    
 }
+
+#if !defined(__CLING__)
+ClassImp(MyAnalysis);
+#endif
